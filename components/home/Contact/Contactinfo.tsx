@@ -1,20 +1,21 @@
 "use client";
 import { Mail, Phone, MapPin, ArrowRight, Github, Linkedin, Twitter, CheckCircle2, Sparkles, Clock } from "lucide-react";
+import Link from "next/link";
 
 const info = [
-  { icon: Mail,   label: "Email",    value: "suraj@example.com", href: "mailto:suraj@example.com" },
-  { icon: Phone,  label: "Phone",    value: "+91 98765 43210",   href: "tel:+919876543210" },
-  { icon: MapPin, label: "Location", value: "Delhi, India",      href: "#" },
+  { icon: Mail, label: "Email", value: "suraj@example.com", href: "mailto:suraj@example.com" },
+  { icon: Phone, label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
+  { icon: MapPin, label: "Location", value: "Delhi, India", href: "#" },
 ]
-const socials  = [
-  { icon: Github,   label: "GitHub",   href: "https://github.com/" },
+const socials = [
+  { icon: Github, label: "GitHub", href: "https://github.com/" },
   { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/" },
-  { icon: Twitter,  label: "Twitter",  href: "https://twitter.com/" },
+  { icon: Twitter, label: "Twitter", href: "https://twitter.com/" },
 ]
 const chips = [
-  { icon: CheckCircle2, text: "Available for freelance",      cls: "text-emerald-400" },
-  { icon: Sparkles,     text: "Open to full-time roles",      cls: "text-violet-400"  },
-  { icon: Clock,        text: "Fast response turnaround",     cls: "text-sky-400"     },
+  { icon: CheckCircle2, text: "Available for freelance", cls: "text-emerald-400" },
+  { icon: Sparkles, text: "Open to full-time roles", cls: "text-violet-400" },
+  { icon: Clock, text: "Fast response turnaround", cls: "text-sky-400" },
 ]
 
 export default function ContactInfo() {
@@ -62,13 +63,13 @@ export default function ContactInfo() {
       <div className="h-px bg-white/5" />
 
       <div className="flex items-center gap-2.5">
-        <span className="text-[10px] text-slate-700 font-mono uppercase tracking-widest">Find me on</span>
+        <span className="text-[10px] text-slate-200 font-mono uppercase tracking-widest">Find me on</span>
         {socials.map(({ icon: Icon, label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noopener noreferrer" title={label}
-            className="w-8 h-8 rounded-full border border-white/8 bg-white/2 flex items-center justify-center text-slate-600 hover:text-white hover:border-violet-500/30 hover:bg-violet-500/8 transition-all duration-200 hover:scale-110"
+          <Link key={label} href={href} target="_blank" rel="noopener noreferrer" title={label}
+            className="w-8 h-8 rounded-full border border-white/10 bg-white/2 flex items-center justify-center text-slate-200 hover:text-white hover:border-violet-500/30 hover:bg-violet-500/8 transition-all duration-200 hover:scale-110"
           >
             <Icon size={14} />
-          </a>
+          </Link>
         ))}
       </div>
     </div>

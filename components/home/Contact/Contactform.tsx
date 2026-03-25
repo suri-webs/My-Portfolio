@@ -1,16 +1,13 @@
 "use client";
 import { useState, ChangeEvent, FormEvent } from "react";
-import { Send, CheckCircle2, User, Mail, Phone, MessageSquare, Briefcase, Building2, Handshake, SmilePlus, AlertCircle, Loader2 } from "lucide-react";
+import { Send, CheckCircle2, User, Mail, Phone, MessageSquare, AlertCircle, Loader2 } from "lucide-react";
+import SubjectSelector from "./Subjectselector";
+
+const FONT = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
+const MONO = "'Geist Mono', 'Fira Code', ui-monospace, monospace"
 
 interface FD { fullname: string; email: string; phone: string; subject: string; message: string }
 interface FE { fullname?: string; email?: string; subject?: string; message?: string }
-
-const subjects = [
-  { value: "Freelance Project",     icon: Briefcase,  label: "Freelance Project"     },
-  { value: "Full-time Opportunity", icon: Building2,  label: "Full-time Opportunity" },
-  { value: "Collaboration",         icon: Handshake,  label: "Collaboration"         },
-  { value: "Just Saying Hi",        icon: SmilePlus,  label: "Just Saying Hi"        },
-]
 
 export default function ContactForm() {
   const [fd, setFd]       = useState<FD>({ fullname:"", email:"", phone:"", subject:"", message:"" })
@@ -21,101 +18,117 @@ export default function ContactForm() {
 
   const validate = (): boolean => {
     const e: FE = {}
-    if (!fd.fullname.trim())              e.fullname = "Required"
-    if (!fd.email.trim())                 e.email    = "Required"
-    else if (!/\S+@\S+\.\S+/.test(fd.email)) e.email = "Invalid email"
-    if (!fd.subject)                      e.subject  = "Please select one"
-    if (!fd.message.trim())               e.message  = "Required"
+    if (!fd.fullname.trim())                  e.fullname = "Required"
+    if (!fd.email.trim())                     e.email    = "Required"
+    else if (!/\S+@\S+\.\S+/.test(fd.email)) e.email    = "Invalid email"
+    if (!fd.subject)                          e.subject  = "Please select one"
+    if (!fd.message.trim())                   e.message  = "Required"
     setErr(e); return !Object.keys(e).length
   }
 
-  const onChange = (e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFd(p => ({ ...p, [name]: value }))
     if (err[name as keyof FE]) setErr(p => ({ ...p, [name]: "" }))
   }
 
+  const onSubjectChange = (value: string) => {
+    setFd(p => ({ ...p, subject: value }))
+    if (err.subject) setErr(p => ({ ...p, subject: "" }))
+  }
+
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); if (!validate()) return
     setBusy(true)
-    await new Promise(r => setTimeout(r, 1200)) // replace with fetch("/api/contact", ...)
+    await new Promise(r => setTimeout(r, 1200))
     setBusy(false); setSent(true)
     setFd({ fullname:"", email:"", phone:"", subject:"", message:"" })
     setTimeout(() => setSent(false), 5000)
   }
 
-  const ring = (n: string) => err[n as keyof FE] ? "ring-red-500/40" : focus===n ? "ring-violet-500/40" : "ring-white/[0.06]"
-  const ic   = (n: string) => err[n as keyof FE] ? "text-red-400" : focus===n ? "text-violet-400" : "text-slate-700"
-  const base = "w-full bg-[#0a0a10] text-white text-sm placeholder:text-slate-700 rounded-lg pl-9 pr-3.5 py-2.5 outline-none ring-1 transition-all duration-150"
+  const border = (n: string) =>
+    err[n as keyof FE] ? "1px solid rgba(239,68,68,0.55)"  :
+    focus === n         ? "1px solid rgba(139,92,246,0.65)" :
+                          "1px solid rgba(255,255,255,0.10)"
+
+  const iconClr = (n: string) =>
+    err[n as keyof FE] ? "#f87171" : focus === n ? "#a78bfa" : "#475569"
+
+  const input = (n: string): React.CSSProperties => ({
+    width: "100%", background: "#0d0d16",
+    color: "#e2e8f0", fontSize: "13px",
+    fontFamily: FONT,
+    padding: "10px 12px 10px 36px",
+    border: border(n), borderRadius: "10px",
+    outline: "none", transition: "border 0.15s",
+  })
+
+  const iconPos: React.CSSProperties    = { position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }
+  const iconPosTop: React.CSSProperties = { position: "absolute", left: 12, top: 11 }
 
   if (sent) return (
-    <div className="flex flex-col items-center gap-4 py-14 text-center">
-      <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-        <CheckCircle2 size={30} className="text-emerald-400" />
+    <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:16, padding:"56px 0", textAlign:"center", fontFamily: FONT }}>
+      <div style={{ width:60, height:60, borderRadius:"50%", background:"rgba(52,211,153,0.1)", border:"1px solid rgba(52,211,153,0.25)", display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <CheckCircle2 size={28} color="#34d399" />
       </div>
       <div>
-        <p className="text-white font-bold">Message sent!</p>
-        <p className="text-slate-600 text-sm mt-0.5">I&apos;ll reply within 24 hours.</p>
+        <p style={{ color:"#fff", fontWeight:600, fontSize:14, fontFamily: FONT }}>Message sent!</p>
+        <p style={{ color:"#64748b", fontSize:12, marginTop:4, fontFamily: FONT }}>I&apos;ll reply within 24 hours.</p>
       </div>
     </div>
   )
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
+    <form onSubmit={onSubmit} style={{ display:"flex", flexDirection:"column", gap:16, fontFamily: FONT }} noValidate>
 
-      {/* Name */}
       <Field label="Full Name" required error={err.fullname}>
-        <User size={13} className={`absolute left-3 top-1/2 -translate-y-1/2 ${ic("fullname")}`} />
+        <User size={13} style={{ ...iconPos, color: iconClr("fullname") }} />
         <input type="text" name="fullname" value={fd.fullname} onChange={onChange}
           onFocus={()=>setFocus("fullname")} onBlur={()=>setFocus(null)}
-          placeholder="Suraj Sharma" className={`${base} ${ring("fullname")}`} />
+          placeholder="Suraj Shakya" style={input("fullname")} />
       </Field>
 
-      {/* Email + Phone */}
-      <div className="grid grid-cols-2 gap-3">
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
         <Field label="Email" required error={err.email}>
-          <Mail size={13} className={`absolute left-3 top-1/2 -translate-y-1/2 ${ic("email")}`} />
+          <Mail size={13} style={{ ...iconPos, color: iconClr("email") }} />
           <input type="email" name="email" value={fd.email} onChange={onChange}
             onFocus={()=>setFocus("email")} onBlur={()=>setFocus(null)}
-            placeholder="you@example.com" className={`${base} ${ring("email")}`} />
+            placeholder="you@example.com" style={input("email")} />
         </Field>
         <Field label="Phone" hint="optional">
-          <Phone size={13} className={`absolute left-3 top-1/2 -translate-y-1/2 ${ic("phone")}`} />
+          <Phone size={13} style={{ ...iconPos, color: iconClr("phone") }} />
           <input type="tel" name="phone" value={fd.phone} onChange={onChange}
             onFocus={()=>setFocus("phone")} onBlur={()=>setFocus(null)}
-            placeholder="+91 98765 43210" className={`${base} ${ring("phone")}`} />
+            placeholder="+91 98765 43210" style={input("phone")} />
         </Field>
       </div>
 
-      {/* Subject — select tag */}
-      <Field label="Reaching out about" required error={err.subject}>
-        <Briefcase size={13} className={`absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none ${ic("subject")}`} />
-        <select name="subject" value={fd.subject} onChange={onChange}
-          onFocus={()=>setFocus("subject")} onBlur={()=>setFocus(null)}
-          className={`${base} ${ring("subject")} cursor-pointer appearance-none`}
-        >
-          <option value="" disabled className="bg-[#0a0a10]">Select a reason...</option>
-          {subjects.map(s => (
-            <option key={s.value} value={s.value} className="bg-[#0a0a10]">{s.label}</option>
-          ))}
-        </select>
-      </Field>
+      <SubjectSelector value={fd.subject} onChange={onSubjectChange} error={err.subject} />
 
-      {/* Message */}
       <Field label="Message" required error={err.message}>
-        <MessageSquare size={13} className={`absolute left-3 top-3 ${ic("message")}`} />
+        <MessageSquare size={13} style={{ ...iconPosTop, color: iconClr("message") }} />
         <textarea name="message" value={fd.message} onChange={onChange} rows={4}
           onFocus={()=>setFocus("message")} onBlur={()=>setFocus(null)}
           placeholder="Tell me about your project..."
-          className={`${base} ${ring("message")} resize-none`} />
-        <p className="text-right text-[10px] text-slate-700 font-mono mt-1">{fd.message.length}/500</p>
+          style={{ ...input("message"), resize:"none", paddingTop:10 }} />
+        <p style={{ textAlign:"right", fontSize:10, color:"#475569", fontFamily: MONO, marginTop:4 }}>
+          {fd.message.length}/500
+        </p>
       </Field>
 
-      <button type="submit" disabled={busy}
-        className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold text-white mt-1 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
-        style={{ background:"linear-gradient(135deg,#6d28d9,#9333ea,#c026d3)", boxShadow:"0 0 24px rgba(139,92,246,0.25)" }}
-      >
-        {busy ? <><Loader2 size={14} className="animate-spin"/>Sending...</> : <><Send size={13}/>Send Message</>}
+      <button type="submit" disabled={busy} style={{
+        width:"100%", display:"flex", alignItems:"center", justifyContent:"center",
+        gap:8, padding:"13px", fontSize:"13px", fontWeight:700,
+        color:"#fff", fontFamily: FONT,
+        border:"none", borderRadius:12, cursor: busy ? "not-allowed" : "pointer",
+        background:"linear-gradient(135deg,#6d28d9,#9333ea,#c026d3)",
+        boxShadow:"0 0 28px rgba(139,92,246,0.3)",
+        opacity: busy ? 0.6 : 1, transition:"opacity 0.2s, transform 0.15s",
+      }}>
+        {busy
+          ? <><Loader2 size={14} className="animate-spin" /> Sending...</>
+          : <><Send size={13} /> Send Message</>
+        }
       </button>
     </form>
   )
@@ -125,14 +138,18 @@ function Field({ label, required, hint, error, children }: {
   label: string; required?: boolean; hint?: string; error?: string; children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-[11px] font-medium text-slate-600 flex items-center gap-1.5">
+    <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
+      <label style={{ fontSize:11, fontWeight:500, color:"#94a3b8", display:"flex", alignItems:"center", gap:5, fontFamily: FONT }}>
         {label}
-        {required && <span className="text-violet-500 text-[10px]">*</span>}
-        {hint && <span className="text-slate-700 font-normal">({hint})</span>}
+        {required && <span style={{ color:"#a78bfa", fontSize:10 }}>*</span>}
+        {hint     && <span style={{ color:"#475569", fontWeight:400 }}>({hint})</span>}
       </label>
-      <div className="relative">{children}</div>
-      {error && <p className="text-red-400 text-[11px] flex items-center gap-1"><AlertCircle size={9}/>{error}</p>}
+      <div style={{ position:"relative" }}>{children}</div>
+      {error && (
+        <p style={{ color:"#f87171", fontSize:11, display:"flex", alignItems:"center", gap:4, fontFamily: FONT }}>
+          <AlertCircle size={9} /> {error}
+        </p>
+      )}
     </div>
   )
 }
