@@ -2,7 +2,7 @@ export const projectsData = [
     {
         id: 1,
         title: "SkillsYard",
-        image: "/images/SkillsYard.png",
+        image: "/images/SkillsYards.png",
         description: "Modern educational platform with interactive graphics tools designed to empower learning and boost creativity for students and professionals.",
         link: "https://skillsyard.com/",
         tags: ["React.js", "Next.js", "TailwindCSS"],
@@ -31,7 +31,7 @@ export const projectsData = [
         title: "Tripo Games Clone",
         image: "/images/tripo.png",
         description: "A React.js games portal showcasing playable web games with an interactive UI and instant-play experience.",
-        link: "https://tripo-games-7pz34zpmq-surajs-projects-39b86542.vercel.app/",
+        link: "https://tripo-games-flame.vercel.app",
         tags: ["React.js", "TailwindCSS", "Vercel"],
         accent: "#f59e0b",
     },

@@ -1,5 +1,7 @@
 'use client'
 
+import Link from "next/link"
+
 export default function Header() {
     return (
         <section className="relative w-[90%] h-screen flex flex-col justify-center gap-7">
@@ -26,10 +28,12 @@ export default function Header() {
 
             {/* CTA Button */}
             <div>
-                <button className="flex items-center gap-2 bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 active:scale-95 transition-all duration-200 text-white font-semibold text-sm px-7 py-3.5 rounded-full cursor-pointer shadow-[0_0_24px_rgba(139,92,246,0.4)] hover:shadow-[0_0_32px_rgba(139,92,246,0.6)]">
-                    <span className="text-fuchsia-200">✦</span>
-                    Checkout my Resume
-                </button>
+                <Link href={'#projects'}>
+                    <button className="flex items-center gap-2 bg-linear-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 active:scale-95 transition-all duration-200 text-white font-semibold text-sm px-7 py-3.5 rounded-full cursor-pointer shadow-[0_0_24px_rgba(139,92,246,0.4)] hover:shadow-[0_0_32px_rgba(139,92,246,0.6)]">
+                        <span className="text-fuchsia-200">✦</span>
+                        Checkout my Projects
+                    </button>
+                </Link>
             </div>
 
         </section>
