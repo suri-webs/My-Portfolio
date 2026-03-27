@@ -10,6 +10,15 @@ export const projectsData = [
     },
     {
         id: 2,
+        title: "Inept Studio",
+        image: "/images/ineptstudio.png",
+        description: "Modern educational platform with interactive graphics tools designed to empower learning and boost creativity for students and professionals.",
+        link: "https://ineptstudio.com/",
+        tags: ["React.js", "Next.js", "TailwindCSS"],
+        accent: "#a855f7",
+    },
+    {
+        id: 3,
         title: "WoodsPicker",
         image: "/images/woodspicker.png",
         description: "Hotel booking platform with room management, real time availability, and a seamless booking interface built with React.js.",
@@ -18,7 +27,7 @@ export const projectsData = [
         accent: "#14b8a6",
     },
     {
-        id: 3,
+        id: 4,
         title: "Integro",
         image: "/images/integro.png",
         description: "A modern React.js portfolio dashboard with interactive charts for visualizing data and tracking insights effortlessly.",
@@ -27,7 +36,7 @@ export const projectsData = [
         accent: "#d946ef",
     },
     {
-        id: 4,
+        id: 5,
         title: "Tripo Games Clone",
         image: "/images/tripo.png",
         description: "A React.js games portal showcasing playable web games with an interactive UI and instant-play experience.",
@@ -36,7 +45,7 @@ export const projectsData = [
         accent: "#f59e0b",
     },
     {
-        id: 5,
+        id: 6,
         title: "Timepluse Clone",
         image: "/images/TimePluse.png",
         description: "A sleek React.js web app for watch tracking and analytics, helping you monitor timepieces, trends and insights with ease.",
@@ -45,7 +54,7 @@ export const projectsData = [
         accent: "#ec4899",
     },
     {
-        id: 6,
+        id: 7,
         title: "School Website",
         image: "/images/Schoolwebsite.png",
         description: "A responsive React.js website for schools, featuring student management, class updates, and an easy-to-use interface.",
