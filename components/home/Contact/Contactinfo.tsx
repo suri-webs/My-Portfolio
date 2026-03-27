@@ -3,14 +3,13 @@ import { Mail, Phone, MapPin, ArrowRight, Github, Linkedin, Twitter, CheckCircle
 import Link from "next/link";
 
 const info = [
-  { icon: Mail, label: "Email", value: "suraj@example.com", href: "mailto:suraj@example.com" },
-  { icon: Phone, label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
+  { icon: Mail, label: "Email", value: "shakyasuraj595@gmail.com", href: "mailto:shakyasuraj595@gmail.com" },
+  { icon: Phone, label: "Phone", value: "+91 78277 72990", href: "tel:+917827772990" },
   { icon: MapPin, label: "Location", value: "Delhi, India", href: "#" },
 ]
 const socials = [
-  { icon: Github, label: "GitHub", href: "https://github.com/" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/" },
-  { icon: Twitter, label: "Twitter", href: "https://twitter.com/" },
+  { icon: Github, label: "GitHub", href: "https://github.com/suri-webs" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://www.linkedin.com/feed/" },
 ]
 const chips = [
   { icon: CheckCircle2, text: "Available for freelance", cls: "text-emerald-400" },

@@ -10,11 +10,12 @@ interface FD { fullname: string; email: string; phone: string; subject: string; 
 interface FE { fullname?: string; email?: string; subject?: string; message?: string }
 
 export default function ContactForm() {
-  const [fd, setFd]       = useState<FD>({ fullname:"", email:"", phone:"", subject:"", message:"" })
-  const [err, setErr]     = useState<FE>({})
-  const [busy, setBusy]   = useState(false)
-  const [sent, setSent]   = useState(false)
-  const [focus, setFocus] = useState<string|null>(null)
+  const [fd, setFd]         = useState<FD>({ fullname:"", email:"", phone:"", subject:"", message:"" })
+  const [err, setErr]       = useState<FE>({})
+  const [busy, setBusy]     = useState(false)
+  const [sent, setSent]     = useState(false)
+  const [apiErr, setApiErr] = useState<string | null>(null)
+  const [focus, setFocus]   = useState<string|null>(null)
 
   const validate = (): boolean => {
     const e: FE = {}
@@ -30,6 +31,7 @@ export default function ContactForm() {
     const { name, value } = e.target
     setFd(p => ({ ...p, [name]: value }))
     if (err[name as keyof FE]) setErr(p => ({ ...p, [name]: "" }))
+    if (apiErr) setApiErr(null)
   }
 
   const onSubjectChange = (value: string) => {
@@ -38,12 +40,34 @@ export default function ContactForm() {
   }
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); if (!validate()) return
+    e.preventDefault()
+    if (!validate()) return
+
     setBusy(true)
-    await new Promise(r => setTimeout(r, 1200))
-    setBusy(false); setSent(true)
-    setFd({ fullname:"", email:"", phone:"", subject:"", message:"" })
-    setTimeout(() => setSent(false), 5000)
+    setApiErr(null)
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fd),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setApiErr(data?.error ?? "Something went wrong. Please try again.")
+        return
+      }
+
+      setSent(true)
+      setFd({ fullname:"", email:"", phone:"", subject:"", message:"" })
+      setTimeout(() => setSent(false), 5000)
+    } catch {
+      setApiErr("Network error. Please check your connection and try again.")
+    } finally {
+      setBusy(false)
+    }
   }
 
   const border = (n: string) =>
@@ -85,7 +109,7 @@ export default function ContactForm() {
         <User size={13} style={{ ...iconPos, color: iconClr("fullname") }} />
         <input type="text" name="fullname" value={fd.fullname} onChange={onChange}
           onFocus={()=>setFocus("fullname")} onBlur={()=>setFocus(null)}
-          placeholder="Suraj Shakya" style={input("fullname")} />
+          placeholder="FirstName LastName" style={input("fullname")} />
       </Field>
 
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
@@ -99,7 +123,7 @@ export default function ContactForm() {
           <Phone size={13} style={{ ...iconPos, color: iconClr("phone") }} />
           <input type="tel" name="phone" value={fd.phone} onChange={onChange}
             onFocus={()=>setFocus("phone")} onBlur={()=>setFocus(null)}
-            placeholder="+91 98765 43210" style={input("phone")} />
+            placeholder="+91 888888 88888" style={input("phone")} />
         </Field>
       </div>
 
@@ -115,6 +139,20 @@ export default function ContactForm() {
           {fd.message.length}/500
         </p>
       </Field>
+
+      {/* API-level error banner */}
+      {apiErr && (
+        <div style={{
+          display:"flex", alignItems:"center", gap:8,
+          padding:"10px 12px", borderRadius:10,
+          background:"rgba(239,68,68,0.08)",
+          border:"1px solid rgba(239,68,68,0.25)",
+          color:"#f87171", fontSize:12, fontFamily: FONT,
+        }}>
+          <AlertCircle size={13} style={{ flexShrink:0 }} />
+          {apiErr}
+        </div>
+      )}
 
       <button type="submit" disabled={busy} style={{
         width:"100%", display:"flex", alignItems:"center", justifyContent:"center",
