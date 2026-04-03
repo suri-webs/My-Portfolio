@@ -2,7 +2,7 @@ export const projectsData = [
     {
         id: 1,
         title: "SkillsYard",
-        image: "/images/SkillsYards.png",
+        image: "/images/skillsyard.png",
         description: "Modern educational platform with interactive graphics tools designed to empower learning and boost creativity for students and professionals.",
         link: "https://skillsyard.com/",
         tags: ["React.js", "Next.js", "TailwindCSS"],

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
-import { ExternalLink, ArrowRight, Hash } from 'lucide-react'
+import {ArrowRight, Hash } from 'lucide-react'
 import { projectsData } from '@/utils/data/Projectsdata'
 import { useParticleCanvas } from '@/utils/constant/Useparticlecanvas'
 
